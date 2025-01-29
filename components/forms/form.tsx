@@ -77,7 +77,6 @@ export function ProposalForm() {
     },
   });
 
-
   useEffect(() => {
     async function fetchSeguradoras() {
       try {
@@ -118,31 +117,11 @@ export function ProposalForm() {
 
   // Watch isFinanciado to conditionally render fields
   const isFinanciado = useWatch({
-
     control: form.control,
     name: 'isFinanced',
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      setLoadingRequest(true);
-
-      await pb?.collection('propostas').create({
-        backoffice: JSON.parse(
-          localStorage.getItem('pocketbase_auth') as string
-        )?.model?.id,
-        seguradora: values.seguradora,
-        vendedor: values.vendedor,
-        cliente: values.customersNames,
-        veiculo: values.vehicles,
-        local: values.address,
-      });
-    } catch (e) {
-      console.log(`error create proposal: ${e}`);
-    } finally {
-      setLoadingRequest(false);
-    }
-
     const fee = values.fee ?? 250;
     const paramsObj: Record<string, string> = {
       customersNames: values.customersNames,
@@ -167,8 +146,10 @@ export function ProposalForm() {
 
     const params = new URLSearchParams(paramsObj);
 
-    const imageUrl = isFinanciado ? `/api/og-financed-miniatura?${params.toString()}` : `/api/og-own-miniatura?${params.toString()}`;
-    console.log(paramsObj)
+    const imageUrl = isFinanciado
+      ? `/api/og-financed-miniatura?${params.toString()}`
+      : `/api/og-own-miniatura?${params.toString()}`;
+    console.log(paramsObj);
     window.open(imageUrl, '_blank');
   }
 
@@ -185,7 +166,7 @@ export function ProposalForm() {
           <div className="border p-4 rounded-md relative w-[100%]">
             <div className="absolute -top-4 left-3 px-1 bg-white dark:bg-background">
               <span className="text-xl font-medium">
-                Informações da cotação      
+                Informações da cotação
               </span>
             </div>
             <div className="space-y-4 mt-2">
@@ -527,78 +508,6 @@ export function ProposalForm() {
                       Espanhol
                     </option>
                   </select>
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Seguradora Selection Field */}
-          <FormField
-            control={form.control}
-            name="seguradora"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base text-left">
-                  Seguradora
-                </FormLabel>
-                <FormControl>
-                  {loadingSeguradoras ? (
-                    <div>Carregando seguradoras...</div>
-                  ) : (
-                    <select
-                      {...field}
-                      className="border p-2 rounded-md w-full dark:bg-inherit"
-                    >
-                      <option value="" disabled>
-                        Selecione uma seguradora
-                      </option>
-                      {seguradoras.map((seguradora) => (
-                        <option
-                          key={seguradora.id}
-                          value={seguradora.id}
-                          className="dark:text-black"
-                        >
-                          {seguradora.name}
-                        </option>
-                      ))}
-                    </select>
-                  )}
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          {/* Vendedor Selection Field */}
-          <FormField
-            control={form.control}
-            name="vendedor"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base text-left">Vendedor</FormLabel>
-                <FormControl>
-                  {loadingVendedores ? (
-                    <div>Carregando vendedores...</div>
-                  ) : (
-                    <select
-                      {...field}
-                      className="border p-2 rounded-md w-full dark:bg-inherit"
-                    >
-                      <option value="" disabled>
-                        Selecione um vendedor
-                      </option>
-                      {vendedores.map((vendedor) => (
-                        <option
-                          key={vendedor.id}
-                          value={vendedor.id}
-                          className="dark:text-black"
-                        >
-                          {vendedor.name}
-                        </option>
-                      ))}
-                    </select>
-                  )}
                 </FormControl>
                 <FormMessage />
               </FormItem>
