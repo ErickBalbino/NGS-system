@@ -121,8 +121,8 @@ export function ProposalForm() {
     name: 'isFinanced',
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('gerando...')
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log('gerando...');
     const fee = values.fee ?? 250;
     const paramsObj: Record<string, string> = {
       customersNames: values.customersNames,
@@ -152,7 +152,7 @@ export function ProposalForm() {
       : `/api/og-own-miniatura?${params.toString()}`;
     console.log(paramsObj);
     window.open(imageUrl, '_blank');
-  }
+  };
 
   const isLoading = loadingSeguradoras || loadingVendedores;
 
@@ -516,8 +516,8 @@ export function ProposalForm() {
           />
 
           <div className="flex justify-center">
-            <Button type="submit" className="w-48">
-              {loadingRequest ? 'Aguarde...' : 'Gerar Proposta'}
+            <Button type="submit" className="w-48" onClick={() => alert('Opa')}>
+              Gerar proposta
             </Button>
 
             <Button
