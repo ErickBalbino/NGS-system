@@ -143,15 +143,6 @@ export function Header({ activeTab }: Props) {
           </nav>
 
           <div className="ml-auto flex items-center gap-2"></div>
-
-          <div className="ml-auto flex items-center gap-2 color-white">
-            <p>
-              {
-                JSON.parse(localStorage.getItem('pocketbase_auth') as string)
-                  ?.model?.name
-              }
-            </p>
-          </div>
         </div>
       </div>
     </div>
