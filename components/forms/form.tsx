@@ -122,6 +122,7 @@ export function ProposalForm() {
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    console.log('gerando...')
     const fee = values.fee ?? 250;
     const paramsObj: Record<string, string> = {
       customersNames: values.customersNames,
@@ -515,11 +516,7 @@ export function ProposalForm() {
           />
 
           <div className="flex justify-center">
-            <Button
-              type="submit"
-              className="w-48"
-              disabled={loadingRequest || isLoading}
-            >
+            <Button type="submit" className="w-48">
               {loadingRequest ? 'Aguarde...' : 'Gerar Proposta'}
             </Button>
 
