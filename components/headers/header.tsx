@@ -50,18 +50,11 @@ export function Header({ activeTab }: Props) {
     return () => clearInterval(timer);
   }, []);
 
-  const userName =
-    JSON.parse(localStorage.getItem('pocketbase_auth') as string)?.model
-      ?.name || '';
-
   return (
     <div className="flex flex-col items-center w-[100%]">
       <div className="mt-6 flex justify-between items-center w-[100%]">
         <div>
-          <h3 className="text-xl color-gray-200">
-            Olá <span className="font-medium color-black">{userName}</span>,{' '}
-            {greeting}
-          </h3>
+          <h3 className="text-xl color-gray-200">Olá, {greeting}</h3>
           <div className="flex space-x-1 mt-1">
             <div className="bg-gray-200 text-gray-800 py-1 px-3 min-h-9 min-w-11 rounded-lg text-lg">
               {currentTime.hours}
@@ -152,7 +145,12 @@ export function Header({ activeTab }: Props) {
           <div className="ml-auto flex items-center gap-2"></div>
 
           <div className="ml-auto flex items-center gap-2 color-white">
-            <p>{JSON.parse(localStorage.getItem("pocketbase_auth") as string)?.model?.name}</p>
+            <p>
+              {
+                JSON.parse(localStorage.getItem('pocketbase_auth') as string)
+                  ?.model?.name
+              }
+            </p>
           </div>
         </div>
       </div>
