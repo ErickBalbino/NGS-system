@@ -2,7 +2,7 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-const IMG_BASE_URL = 'http://localhost:3000/'; 
+const IMG_BASE_URL = 'http://localhost:3001/'; 
 const MAX_NAME_LENGTH = 45;
 const MAX_VEHICLE_LENGTH = 40;
 const MAX_ADDRESS_LENGTH = 40;

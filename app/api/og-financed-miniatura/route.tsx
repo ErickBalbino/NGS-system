@@ -2,7 +2,6 @@ import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
 
-
 const IMG_BASE_URL = process.env.NEXT_PUBLIC_IMG_BASE_URL 
 // const IMG_BASE_URL = process.env.IMG_BASE_URL
 const MAX_NAME_LENGTH = 300;

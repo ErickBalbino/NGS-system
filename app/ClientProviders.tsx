@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { PocketBaseProvider } from '@/lib/Pocketbase';
-import { ThemeProvider } from '@/components/theme/theme-provider';
-import { Toaster } from '@/components/ui/toaster';
-import { AuthProvider } from '@/context/Auth';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { PocketBaseProvider } from "@/lib/Pocketbase";
+import { ThemeProvider } from "@/components/theme/theme-provider";
+import { Toaster } from "@/components/ui/toaster";
+import { AuthProvider } from "@/context/Auth";
 
 const queryClient = new QueryClient();
 

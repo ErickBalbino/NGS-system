@@ -1,10 +1,7 @@
-'use client';
-import React, { useState, useEffect } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm, useWatch } from 'react-hook-form';
-import { z } from 'zod';
-
-import { usePocketBase } from '@/lib/Pocketbase';
+"use client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm, useWatch } from "react-hook-form";
+import { z } from "zod";
 
 import {
   FormItem,
@@ -13,23 +10,21 @@ import {
   FormField,
   FormLabel,
   FormMessage,
-} from '../ui/form';
-import { Checkbox } from '../ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import CurrencyInput from '../ui/CurrencyInput';
-import { Seguradora } from '@/types/Seguradora';
-import { Vendedor } from '@/types/Vendedor';
+} from "../ui/form";
+import { Checkbox } from "../ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import CurrencyInput from "../ui/CurrencyInput";
 
 const formSchema = z.object({
   customersNames: z.string().min(2, {
-    message: 'Nome do cliente deve ter no mínimo 3 caracteres.',
+    message: "Nome do cliente deve ter no mínimo 3 caracteres.",
   }),
   vehicles: z.string().min(3, {
-    message: 'Digite um nome válido de veículo',
+    message: "Digite um nome válido de veículo",
   }),
   address: z.string().min(3, {
-    message: 'Digite um endereço válido',
+    message: "Digite um endereço válido",
   }),
   monthlyValueLiability: z.coerce.number(),
   optionADueToday: z.coerce.number(),
@@ -39,28 +34,18 @@ const formSchema = z.object({
   optionBMonthly: z.coerce.number(),
   optionCMonthly: z.coerce.number(),
   fee: z.coerce.number().optional(), // Fee is optional
-  paymentOptions: z.enum(['3', '5', '6', '11']),
+  paymentOptions: z.enum(["3", "5", "6", "11"]),
   isFinanced: z.boolean(),
-  language: z.enum(['Português', 'Espanhol']),
-  seguradora: z.string().nonempty({ message: 'Seguradora é obrigatória' }),
-  vendedor: z.string().nonempty({ message: 'Vendedor é obrigatório' }),
+  language: z.enum(["Português", "Espanhol"]),
 });
 
 export function ProposalForm() {
-  const [loadingRequest, setLoadingRequest] = useState<boolean>(false);
-  const pb = usePocketBase();
-
-  const [seguradoras, setSeguradoras] = useState<Seguradora[]>([]);
-  const [vendedores, setVendedores] = useState<Vendedor[]>([]);
-  const [loadingSeguradoras, setLoadingSeguradoras] = useState<boolean>(true);
-  const [loadingVendedores, setLoadingVendedores] = useState<boolean>(true);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      customersNames: '',
-      vehicles: '',
-      address: '',
+      customersNames: "",
+      vehicles: "",
+      address: "",
       monthlyValueLiability: 0,
       optionADueToday: 0,
       optionBDueToday: 0,
@@ -69,60 +54,20 @@ export function ProposalForm() {
       optionBMonthly: 0,
       optionCMonthly: 0,
       fee: 250, // Default fee value set to 250
-      paymentOptions: '6',
+      paymentOptions: "6",
       isFinanced: true, // Default to "Financiado"
-      language: 'Português',
-      seguradora: '', // Empty by default
-      vendedor: '', // Empty by default
+      language: "Português",
     },
   });
-
-  useEffect(() => {
-    async function fetchSeguradoras() {
-      try {
-        setLoadingSeguradoras(true);
-        const seguradorasData: Seguradora[] | undefined = await pb
-          ?.collection('seguradoras')
-          .getFullList();
-        setSeguradoras(seguradorasData as unknown as Seguradora[]);
-
-        const progressive = seguradorasData?.find(
-          (seguradora: Seguradora) => seguradora.name === 'Progressive'
-        );
-        if (progressive) {
-          form.setValue('seguradora', progressive.id);
-        }
-      } catch (error) {
-        console.error('Failed to fetch seguradoras:', error);
-      } finally {
-        setLoadingSeguradoras(false);
-      }
-    }
-
-    async function fetchVendedores() {
-      try {
-        setLoadingVendedores(true);
-        const vendedoresData = await pb?.collection('vendedores').getFullList();
-        setVendedores(vendedoresData as unknown as Vendedor[]);
-      } catch (error) {
-        console.error('Failed to fetch vendedores:', error);
-      } finally {
-        setLoadingVendedores(false);
-      }
-    }
-
-    fetchSeguradoras();
-    fetchVendedores();
-  }, [pb, form]);
 
   // Watch isFinanciado to conditionally render fields
   const isFinanciado = useWatch({
     control: form.control,
-    name: 'isFinanced',
+    name: "isFinanced",
   });
 
   const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log('gerando...');
+    console.log("gerando...");
     const fee = values.fee ?? 250;
     const paramsObj: Record<string, string> = {
       customersNames: values.customersNames,
@@ -151,10 +96,8 @@ export function ProposalForm() {
       ? `/api/og-financed-miniatura?${params.toString()}`
       : `/api/og-own-miniatura?${params.toString()}`;
     console.log(paramsObj);
-    window.open(imageUrl, '_blank');
+    window.open(imageUrl, "_blank");
   };
-
-  const isLoading = loadingSeguradoras || loadingVendedores;
 
   return (
     <div className="flex flex-col mt-12 items-center justify-center space-y-8 w-[100%]">
@@ -516,21 +459,19 @@ export function ProposalForm() {
           />
 
           <div className="flex justify-center">
-            <Button type="submit" className="w-48" onClick={() => alert('Opa')}>
+            <Button variant={"default"} type="submit" className="w-48">
               Gerar proposta
             </Button>
 
             <Button
               type="button"
-              variant="reset"
               className="w-48 mx-2"
               onClick={() => form.reset()}
-              disabled={isLoading}
             >
               Resetar
             </Button>
           </div>
-        </form>
+        </form>{" "}
       </Form>
     </div>
   );
